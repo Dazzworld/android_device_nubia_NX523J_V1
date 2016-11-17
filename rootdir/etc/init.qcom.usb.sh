@@ -140,10 +140,10 @@ case "$usb_config" in
        *)
           case "$build_type" in
               "eng")
-                 #setprop persist.sys.usb.config nubia,adb
+                 setprop persist.sys.usb.config nubia,adb
               ;;
                *)
-                 #setprop persist.sys.usb.config nubia
+                 setprop persist.sys.usb.config nubia
               ;;
          esac
       ;;
@@ -256,4 +256,3 @@ case "$soc_id" in
 		setprop sys.usb.rps_mask 4
 	;;
 esac
-setprop sys.zte.poalarm.support 1

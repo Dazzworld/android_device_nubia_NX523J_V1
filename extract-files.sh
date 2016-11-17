@@ -17,7 +17,7 @@
 
 set -e
 
-DEVICE=NX529J
+DEVICE=NX523J_V1
 VENDOR=nubia
 
 # Load extractutils and do some sanity checks

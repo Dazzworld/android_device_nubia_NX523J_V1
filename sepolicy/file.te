@@ -1,0 +1,3 @@
+type sysfs_prox_cal, sysfs_flashlight,modem_config_file,ssr_ramdump_data_file, file_type;
+type qfp-daemon_data_file,rfs_file,rfs_shared_hlos_file,persist_drm_file, file_type;
+type sysfs_rgb_cal, file_type;

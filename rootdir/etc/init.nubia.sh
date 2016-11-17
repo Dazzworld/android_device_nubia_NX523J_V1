@@ -31,7 +31,6 @@ case $factory in
                 echo 19D2 > /sys/class/android_usb/android0/idVendor
                 echo FFAF > /sys/class/android_usb/android0/idProduct
                 echo smd > /sys/class/android_usb/android0/f_serial/transports
-                echo serial_hsic > /sys/class/android_usb/android0/f_serial/transport_names
                 echo diag > /sys/class/android_usb/android0/f_diag/clients
                 echo diag,serial,mass_storage > /sys/class/android_usb/android0/functions
                 echo 1 > /sys/class/android_usb/android0/enable
@@ -41,7 +40,6 @@ case $factory in
                 echo 19D2 > /sys/class/android_usb/android0/idVendor
                 echo FFB0 > /sys/class/android_usb/android0/idProduct
                 echo smd > /sys/class/android_usb/android0/f_serial/transports
-                echo serial_hsic > /sys/class/android_usb/android0/f_serial/transport_names
                 echo diag > /sys/class/android_usb/android0/f_diag/clients
                 echo diag,serial,mass_storage,adb > /sys/class/android_usb/android0/functions
                 echo 1 > /sys/class/android_usb/android0/enable
@@ -53,3 +51,4 @@ case $factory in
     ;;
 esac
 
+setprop sys.zte.poalarm.support 1

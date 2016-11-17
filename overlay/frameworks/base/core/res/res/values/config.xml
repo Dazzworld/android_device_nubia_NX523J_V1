@@ -29,14 +29,6 @@
 -->
 
 <resources>
-   <!-- monitor locale change -->
-   <bool name="config_monitor_locale_change">true</bool>
-
-   <!-- display for radio tech -->
-   <bool name="config_display_rat">true</bool>
-
-   <!-- spn display control -->
-   <bool name="config_spn_display_control">true</bool>
 
    <!-- Configure wifi tcp buffersizes in the form:
         rmem_min,rmem_def,rmem_max,wmem_min,wmem_def,wmem_max -->
@@ -76,20 +68,32 @@
         <item>mobile_supl,3,0,2,60000,true</item>
         <item>mobile_dun,4,0,2,60000,true</item>
         <item>mobile_hipri,5,0,3,60000,true</item>
-        <item>bluetooth,7,7,1,-1,true</item>
         <item>mobile_fota,10,0,2,60000,true</item>
         <item>mobile_ims,11,0,2,60000,true</item>
         <item>mobile_cbs,12,0,2,60000,true</item>
-        <item>wifi_p2p,13,1,0,-1,true</item>
-        <item>mobile_ia,14,0,2,-1,true</item>
-        <item>mobile_emergency,15,0,2,-1,true</item>
-        <item>usbnet,51,51,6,-1,true</item>
-        <item>mobile_httpproxy,52,0,2,60000,true</item>
-        <item>mobile_internet,53,0,2,60000,true</item>
-        <item>mobile_vapp,54,0,2,1800000,true</item>
-        <item>mobile_caller_name_id,55,0,2,1800000,true</item>
-        <item>mobile_v800,56,0,2,60000,true</item>
+        <item>bluetooth,7,7,2,-1,true</item>
+
     </string-array>
+
+    <integer-array name="config_protectedNetworks">
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>14</item>
+        <item>15</item>
+    </integer-array>
+
+    <integer-array name="config_data_usage_network_types">
+        <item>0</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>14</item>
+    </integer-array>
 
     <!-- This string array should be overridden by the device to present a list of radio
          attributes.  This is used by the connectivity manager to decide which networks can coexist
@@ -100,6 +104,7 @@
         <item>"1,1"</item>
         <item>"0,1"</item>
         <item>"7,1"</item>
+        <item>"9,1"</item>
     </string-array>
 
     <!-- List of regexpressions describing the interface (if any) that represent tetherable
@@ -220,9 +225,9 @@
 
     <!-- Configuration to restart radio upon PDP_DEACTIVATE with
          error cause as Regular deactivation(36). -->
-    <!--
-    <bool name="config_radio_reset_on_regular_deactivation">false</bool>
-    -->
+
+    <bool name="config_radio_reset_on_regular_deactivation">true</bool>
+
     <!-- Flag indicating if the speed up audio on mt call code should be executed -->
     <bool name="config_speed_up_audio_on_mt_calls">true</bool>
 
@@ -237,6 +242,9 @@
          provisioning, availability etc -->
     <bool name="config_carrier_volte_available">true</bool>
 
+    <!-- Flag specifying whether VoLTE TTY is supported -->
+    <bool name="config_carrier_volte_tty_supported">true</bool>
+    
     <!-- Flag specifying whether VT is available on device -->
     <bool name="config_device_vt_available">true</bool>
 
@@ -246,15 +254,16 @@
     <bool name="config_carrier_vt_available">true</bool>
 
     <string-array name="config_mobile_tcp_buffers">
-        <item>"lte:2097152,4194304,8388608,262144,524288,1048576"</item>
-        <item>"umts:4094,87380,1220608,4096,16384,1220608"</item>
-        <item>"hspa:4094,87380,1220608,4096,16384,1220608"</item>
-        <item>"hsupa:4094,87380,1220608,4096,16384,1220608"</item>
-        <item>"hsdpa:4094,87380,1220608,4096,16384,1220608"</item>
-        <item>"hspap:4094,87380,1220608,4096,16384,1220608"</item>
-        <item>"edge:4093,26280,35040,4096,16384,35040"</item>
-        <item>"gprs:4092,8760,11680,4096,8760,11680"</item>
-        <item>"evdo:4094,87380,524288,4096,16384,262144"</item>
+        <item>lte:2097152,4194304,8388608,262144,524288,1048576</item>
+        <item>lte_ca:2097152,4194304,8388608,262144,524288,1048576</item>
+        <item>umts:4094,87380,1220608,4096,16384,1220608</item>
+        <item>hspa:4094,87380,1220608,4096,16384,1220608</item>
+        <item>hsupa:4094,87380,1220608,4096,16384,1220608</item>
+        <item>hsdpa:4094,87380,1220608,4096,16384,1220608</item>
+        <item>hspap:4094,87380,1220608,4096,16384,1220608</item>
+        <item>edge:4093,26280,35040,4096,16384,35040</item>
+        <item>gprs:4092,8760,11680,4096,8760,11680</item>
+        <item>evdo:4094,87380,524288,4096,16384,262144</item>
     </string-array>
 
     <!-- Hardware keys present on the device, stored as a bit field.
@@ -269,7 +278,31 @@
             64 - Volume rocker
          For example, a device with Home, Back and Menu keys would set this
          config to 7. -->
-    <integer name="config_deviceHardwareKeys">71</integer>
+    <integer name="config_deviceHardwareKeys">15</integer>
+    <string-array name="no_ems_support_sim_operators">
+        <item>20404;suffix;BAE0000000000000</item>
+    </string-array>
+
+   <string-array name="config_telephonyHardware">
+        <item>0,modem,0,0,0,1,1,1</item>
+        <item>1,sim,0,modem</item>
+    </string-array>
+
+    <string-array name="networks_not_clear_data">
+        <item>71203</item>
+        <item>71606</item>
+        <item>71610</item>
+        <item>732101</item>
+    </string-array>
+
+    <integer-array name="config_onlySingleDcAllowed">
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>12</item>
+    </integer-array>
 
     <!-- Hardware keys present on the device with the ability to wake, stored as a bit field.
          This integer should equal the sum of the corresponding value for each
@@ -300,7 +333,9 @@
     <bool name="config_enableFusedLocationOverlay" translatable="false">false</bool>
     <string name="config_networkLocationProviderPackageName" translatable="false">com.qualcomm.location</string>
     <string name="config_fusedLocationProviderPackageName" translatable="false">com.qualcomm.location</string>
+
     <bool name="config_allowAllRotations">true</bool>
+
     <!-- Enable doze mode -->
     <string name="config_dozeComponent">com.android.systemui/com.android.systemui.doze.DozeService</string>
     <bool name="config_dozeAfterScreenOff">true</bool>
@@ -330,6 +365,19 @@
     <bool name="config_proximityCheckOnWakeEnabledByDefault">true</bool>
 
 
+    <!-- The list absolute paths of jar/apk files containing the device specific handlers,
+         delimited by File.pathSeparator, which defaults to ":" on Android -->
+    <string name="config_deviceKeyHandlerLib" translatable="false">/system/framework/com.cyanogenmod.keyhandler.jar</string>
+
+    <!-- Full qualified name of the class that implements
+         com.android.internal.os.DeviceKeyHandler interface. -->
+    <string name="config_deviceKeyHandlerClass" translatable="false">com.cyanogenmod.settings.device.KeyHandler</string>
+
     <!-- Is the device capable of hot swapping an ICC Card -->
     <bool name="config_hotswapCapable">true</bool>
+
+    <bool name="config_telephony_use_own_number_for_voicemail">false</bool>
+      <bool name="config_restart_radio_on_pdp_fail_regular_deactivation">false</bool>
+    <bool name="config_use_sim_language_file">true</bool>
+    <bool name="config_LTE_eri_for_network_name">true</bool>
 </resources>

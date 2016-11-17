@@ -50,10 +50,13 @@ on init
     symlink /storage/emulated/legacy /storage/sdcard0
     symlink /mnt/shell/emulated/0 /storage/emulated/legacy	 
 #ZTEMT end
-
-#ZTEMT add for bootsound
+#NUBIA add for bootsound
 on property:sys.zte.boot.sound=1
     start media
-#ZTEMT end
+#NUBIA end
 
-#import init.powermo.rc
+#NUBIA add for boot sound
+    chmod 0664 /system/media/audio/ui/bootup.wav
+    chmod 0755 /system/bin/bootsound.sh
+#NUBIA end
+

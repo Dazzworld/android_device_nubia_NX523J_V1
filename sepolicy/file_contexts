@@ -1,0 +1,94 @@
+/dev/goodix_fp u:object_r:fingerprint_device:s0
+/system/bin/gxFpDaemon u:object_r:fingerprintserver_exec:s0
+
+/dev/qce                                        u:object_r:qce_device:s0
+
+/dev/block/bootdevice/by-name/dip               u:object_r:dip_device:s0
+/dev/block/bootdevice/by-name/mdtp              u:object_r:mdtp_device:s0
+/dev/block/bootdevice/by-name/config            u:object_r:persistent_data_block_device:s0
+/dev/socket/netmgr(/.*)?                        u:object_r:netmgrd_socket:s0
+/system/bin/qfp-daemon                          u:object_r:qfp-daemon_exec:s0
+/system/vendor/bin/slim_daemon                  u:object_r:location_exec:s0
+/system/bin/power_engine                        u:object_r:power_engine_exec:s0
+/system/bin/dmapp                               u:object_r:dm_exec:s0
+/sys/devices/virtual/graphics/fb([0-2])+/dyn_pu                     u:object_r:sysfs_graphics:s0
+/sys/devices/virtual/graphics/fb([0-2])+/hist_event                 u:object_r:sysfs_graphics:s0
+/sys/devices/virtual/graphics/fb([0-2])+/pp_bl_event                u:object_r:sysfs_graphics:s0
+/sys/devices/virtual/graphics/fb([0-2])+/hdcp/tp                    u:object_r:sysfs_graphics:s0
+/sys/class/leds/flashlight/brightness                               u:object_r:sysfs_flashlight:s0
+/sys/devices/soc.0/flashlight.64/leds/flashlight/brightness          u:object_r:sysfs_flashlight:s0
+
+# add by nubia start
+/sys/class/proximity/proximity/chip_name                			u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_uncover_max                		u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_debug                			u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_init                			u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/reg                					u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_value                			u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_offset_cal_start                u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_data_safe_range_min             u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_data_safe_range_max             u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_data_max                        u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_offset_cal                      u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_offset_cal_verify               u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_thres_min                       u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_thres_max                       u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/threshold                            u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_thres                           u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_calibrate_start                 u:object_r:sysfs_prox_cal:s0
+/sys/class/proximity/proximity/prox_calibrate_verify                u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_offset_cal_start      u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_data_safe_range_min   u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_data_safe_range_max   u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_data_max              u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_offset_cal            u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_offset_cal_verify     u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_thres_min             u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_thres_max             u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/threshold                  u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_thres                 u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_calibrate_start       u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_calibrate_verify      u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/chip_name                	u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_uncover_max           u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_debug                	u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_init                	u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/reg                		u:object_r:sysfs_prox_cal:s0
+/sys/devices/virtual/proximity/proximity/prox_value            		u:object_r:sysfs_prox_cal:s0
+/sys/class/hall_device/hall_device/hall_value                           u:object_r:sysfs_prox_cal:s0
+
+/sys/class/light/light/chip_name									u:object_r:sysfs_rgb_cal:s0
+/sys/class/light/light/calibrate									u:object_r:sysfs_rgb_cal:s0
+/sys/class/light/light/tp_cfg										u:object_r:sysfs_rgb_cal:s0
+/sys/class/light/light/fac_calibrate								u:object_r:sysfs_rgb_cal:s0
+/sys/class/light/light/light_value									u:object_r:sysfs_rgb_cal:s0
+/sys/class/light/light/red_data										u:object_r:sysfs_rgb_cal:s0
+/sys/class/light/light/green_data									u:object_r:sysfs_rgb_cal:s0
+/sys/class/light/light/blue_data									u:object_r:sysfs_rgb_cal:s0
+/sys/class/light/light/clear_data									u:object_r:sysfs_rgb_cal:s0
+/sys/class/light/light/dump_reg										u:object_r:sysfs_rgb_cal:s0
+/sys/class/light/light/module_tpcolor								u:object_r:sysfs_rgb_cal:s0
+/sys/class/light/light/dump_tp_parameter							u:object_r:sysfs_rgb_cal:s0
+/sys/devices/virtual/light/light/red_data							u:object_r:sysfs_rgb_cal:s0
+/sys/devices/virtual/light/light/tp_cfg								u:object_r:sysfs_rgb_cal:s0
+/sys/devices/virtual/light/light/chip_name							u:object_r:sysfs_rgb_cal:s0
+/sys/devices/virtual/light/light/fac_calibrate						u:object_r:sysfs_rgb_cal:s0
+/sys/devices/virtual/light/light/calibrate						    u:object_r:sysfs_rgb_cal:s0
+/sys/devices/virtual/light/light/light_value						u:object_r:sysfs_rgb_cal:s0
+/sys/devices/virtual/light/light/green_data							u:object_r:sysfs_rgb_cal:s0
+/sys/devices/virtual/light/light/blue_data							u:object_r:sysfs_rgb_cal:s0
+/sys/devices/virtual/light/light/clear_data							u:object_r:sysfs_rgb_cal:s0
+/sys/devices/virtual/light/light/dump_reg							u:object_r:sysfs_rgb_cal:s0
+/sys/devices/virtual/light/light/module_tpcolor						u:object_r:sysfs_rgb_cal:s0
+/sys/devices/virtual/light/light/dump_tp_parameter					u:object_r:sysfs_rgb_cal:s0
+#add by nubia end
+
+/data/misc/modem_config(/.*)?                                       u:object_r:modem_config_file:s0
+/data/misc/stargate(/.*)?                                           u:object_r:qfp-daemon_data_file:s0
+/data/ramdump(/.*)?                                                 u:object_r:ssr_ramdump_data_file:s0
+
+/persist/drm(/.*)?                                                  u:object_r:persist_drm_file:s0
+/persist/rfs.*                                                      u:object_r:rfs_file:s0
+/persist/hlos_rfs(/.*)?                                             u:object_r:rfs_shared_hlos_file:s0
+
+

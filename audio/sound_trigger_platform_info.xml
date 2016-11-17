@@ -27,7 +27,9 @@
 <!--- IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                             -->
 <sound_trigger_platform_info>
     <device name="DEVICE_HANDSET_APE_ACDB_ID" value="130" />
+    <device name="DEVICE_HEADSET_APE_ACDB_ID" value="138" />
     <device name="DEVICE_HANDSET_CPE_ACDB_ID" value="128" />
+    <device name="DEVICE_HEADSET_CPE_ACDB_ID" value="139" />
     <ctrl name="execution_type" value="APE" /> <!-- value: "CPE" "APE" -->
     <ctrl name="max_cpe_sessions" value="1" />
     <ctrl name="max_cpe_phrases" value="6" />
@@ -38,5 +40,6 @@
     <ctrl name="enable_failure_detection" value="false" />
     <ctrl name="rx_concurrency_disabled" value="true" />
     <ctrl name="rx_conc_max_st_ses" value="1" />
+    <ctrl name="support_device_switch" value="false" />
 </sound_trigger_platform_info>
 

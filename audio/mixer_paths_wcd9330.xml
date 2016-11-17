@@ -196,6 +196,11 @@
     <ctl name="MultiMedia5 Mixer INTERNAL_FM_TX" value="0" />
     <!-- fm end -->
 
+    <!-- RT Proxy Cal -->
+    <ctl name="RT_PROXY_1_RX SetCalMode" value="CAL_MODE_NONE" />
+    <ctl name="RT_PROXY_1_TX SetCalMode" value="CAL_MODE_NONE" />
+    <!-- RT Proxy Cal end -->
+
     <!-- Voice -->
     <ctl name="SLIM_0_RX_Voice Mixer CSVoice" value="0" />
     <ctl name="Voice_Tx Mixer SLIM_0_TX_Voice" value="0" />
@@ -243,7 +248,7 @@
     <ctl name="HDMI_RX_Voice Mixer VoiceMMode1" value="0" />
     <!-- Multimode Voice1 BTSCO -->
     <ctl name="INTERNAL_BT_SCO_RX_Voice Mixer VoiceMMode1" value="0" />
-    <ctl name="VoiceMMode1_Tx Mixer INTERNAL_BT_SCO_TX_MMode1" value="0" />
+    <ctl name="VoiceMMode1_Tx Mixer INT_BT_SCO_TX_MMode1" value="0" />
     <!-- Multimode Voice1 USB headset -->
     <ctl name="AFE_PCM_RX_Voice Mixer VoiceMMode1" value="0" />
     <ctl name="VoiceMMode1_Tx Mixer AFE_PCM_TX_MMode1" value="0" />
@@ -256,7 +261,7 @@
     <ctl name="HDMI_RX_Voice Mixer VoiceMMode2" value="0" />
     <!-- Multimode Voice2 BTSCO -->
     <ctl name="INTERNAL_BT_SCO_RX_Voice Mixer VoiceMMode2" value="0" />
-    <ctl name="VoiceMMode2_Tx Mixer INTERNAL_BT_SCO_TX_MMode2" value="0" />
+    <ctl name="VoiceMMode2_Tx Mixer INT_BT_SCO_TX_MMode2" value="0" />
     <!-- Multimode Voice2 USB headset -->
     <ctl name="AFE_PCM_RX_Voice Mixer VoiceMMode2" value="0" />
     <ctl name="VoiceMMode2_Tx Mixer AFE_PCM_TX_MMode2" value="0" />
@@ -1162,7 +1167,7 @@
 
     <path name="voicemmode1-call bt-sco">
         <ctl name="INTERNAL_BT_SCO_RX_Voice Mixer VoiceMMode1" value="1" />
-        <ctl name="VoiceMMode1_Tx Mixer INTERNAL_BT_SCO_TX_MMode1" value="1" />
+        <ctl name="VoiceMMode1_Tx Mixer INT_BT_SCO_TX_MMode1" value="1" />
     </path>
 
     <path name="voicemmode1-call bt-sco-wb">
@@ -1195,7 +1200,7 @@
 
     <path name="voicemmode2-call bt-sco">
         <ctl name="INTERNAL_BT_SCO_RX_Voice Mixer VoiceMMode2" value="1" />
-        <ctl name="VoiceMMode2_Tx Mixer INTERNAL_BT_SCO_TX_MMode2" value="1" />
+        <ctl name="VoiceMMode2_Tx Mixer INT_BT_SCO_TX_MMode2" value="1" />
     </path>
 
     <path name="voicemmode2-call bt-sco-wb">

@@ -41,10 +41,13 @@ on init
     start qfintverify
     # Set permissions for persist partition
     mkdir /persist 0771 system system
+    # See storage config details at http://source.android.com/tech/storage/
+    # ZTEMT: Some commands are moved to and modified in init.project.rc
 
 on early-boot
     # set RLIMIT_MEMLOCK to 64MB
     setrlimit 8 67108864 67108864
+    write /sys/block/dm-0/queue/read_ahead_kb 2048
     # Allow subsystem (modem etc) debugging
     write /sys/module/subsystem_restart/parameters/enable_debug ${persist.sys.ssr.enable_debug}
     write /sys/module/pil_msa/parameters/pbl_mba_boot_timeout_ms ${persist.sys.mba_boot_timeout}
@@ -56,46 +59,65 @@ on early-boot
     chown root audio /sys/kernel/boot_adsp/boot
 
 on boot
-
-    chown system system /sys/class/timed_output/vibrator/enable
-    chown system system /sys/class/leds/keyboard-backlight/brightness
-    chown system system /sys/class/leds/lcd-backlight/brightness
-    chown system system /sys/class/leds/torch-light/brightness
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+# ZTEMT: added by nubia camera
+    chmod 0664  /sys/class/leds/lcd-backlight/brightness
     chown system system /sys/class/leds/flashlight/brightness
-    chown system system /sys/class/leds/button-backlight/brightness
-    chown system system /sys/class/leds/jogball-backlight/brightness
-    chown system system /sys/class/leds/red/brightness
     chown system system /sys/class/leds/red/blink
-    chown system system /sys/class/leds/green/brightness
-    chown system system /sys/class/leds/blue/brightness
-    chown system system /sys/class/leds/red/device/grpfreq
-    chown system system /sys/class/leds/red/device/grppwm
-    chown system system /sys/class/leds/red/device/blink
-    chown system system /sys/class/timed_output/vibrator/enable
-    chown system system /sys/module/sco/parameters/disable_esco
-    chown system system /sys/kernel/ipv4/tcp_wmem_min
-    chown system system /sys/kernel/ipv4/tcp_wmem_def
-    chown system system /sys/kernel/ipv4/tcp_wmem_max
-    chown system system /sys/kernel/ipv4/tcp_rmem_min
-    chown system system /sys/kernel/ipv4/tcp_rmem_def
-    chown system system /sys/kernel/ipv4/tcp_rmem_max
-    chown system system /sys/class/leds/nubia_led/outn
-    chown system system /sys/class/leds/nubia_led/grade_parameter
-    chown system system /sys/class/leds/nubia_led/fade_parameter
-    chown system system /sys/class/leds/nubia_led/blink_mode
-# ADDED BY ZTEMT ZhuBing
+	chown system system /sys/class/leds/nubia_led/outn
+	chown system system /sys/class/leds/nubia_led/grade_parameter
+	chown system system /sys/class/leds/nubia_led/fade_parameter
+	chown system system /sys/class/leds/nubia_led/blink_mode
+# ADDED BY ZTEMT
 # add the sensor sysfs permission
+	#gesture
+ 	chown system system /sys/class/gesture/gesture/enable
+	chown system system /sys/class/gesture/gesture/gesture_offset_init
+	chown system system /sys/class/gesture/gesture/gesture_data_safe_range_max
+	chown system system /sys/class/gesture/gesture/gesture_data_safe_range_min
+	chown system system /sys/class/gesture/gesture/gesture_offset_cal
+	chown system system /sys/class/gesture/gesture/gesture_offset_cal_start
+	chown system system /sys/class/gesture/gesture/gesture_channel_data_max
+
+ 	chmod 0644 /sys/class/gesture/gesture/enable
+ 	chmod 0644 /sys/class/gesture/gesture/gesture_offset_init
+ 	chmod 0644 /sys/class/gesture/gesture/gesture_data_safe_range_max
+ 	chmod 0644 /sys/class/gesture/gesture/gesture_data_safe_range_min
+	chmod 0644 /sys/class/gesture/gesture/gesture_offset_cal
+	chmod 0644 /sys/class/gesture/gesture/gesture_offset_cal_start
+	chmod 0644 /sys/class/gesture/gesture/gesture_channel_data_max
+
 	#hall_device
 	chown system system /sys/class/hall_device/hall_device/enable
 	chown system system /sys/class/hall_device/hall_device/hall_value
 	chmod 0644 /sys/class/hall_device/hall_device/enable
 	chmod 0644 /sys/class/hall_device/hall_device/hall_value
-   
+	
+	#ZTEMT:jixd add for af infinity calibration -----begin
+	mkdir /persist/camera 0755 system system
+	chown system system /persist/camera
+	chmod 0751 /persist/camera
+
+	chown system system /persist/camera/camera_focus_pos.conf
+	chmod 0644 /persist/camera/camera_focus_pos.conf
+	#ZTEMT:jixd add for af infinity calibration -----end
+
 	#tp
 	mkdir persist/tp 0777 system system
 	mkdir persist/tp/detect 0777 system system
+	chmod 0777 /persist/sensors/cyttsp5_paramarray.bin
 
+	#smart key
+	chown system system /sys/class/pressure_device/pressure_device/enable_smart_key
+	chown system system /sys/class/pressure_device/pressure_device/sensitivity_attr
+	chown system system /sys/class/pressure_device/pressure_device/vlps_wakeup
+	chmod 0644 /sys/class/pressure_device/pressure_device/enable_smart_key
+	chmod 0644 /sys/class/pressure_device/pressure_device/sensitivity_attr
+	chmod 0644 /sys/class/pressure_device/pressure_device/vlps_wakeup
 	#proximity
+
+	chown system system /sys/class/proximity/proximity/enable
 	#txc-pa224
 	chown system system /sys/class/proximity/proximity/delay
 	chown system system /sys/class/proximity/proximity/chip_name
@@ -106,10 +128,11 @@ on boot
 	chown system system /sys/class/proximity/proximity/prox_value
 	chown system system /sys/class/proximity/proximity/prox_data_max
 	chown system system /sys/class/proximity/proximity/prox_offset_cal
+
+	#taos-tmd2772
 	mkdir /persist/proxdata 0775 system system
 	chown system system /persist/proxdata
 	chmod 0775 /persist/proxdata
-	chown system system /sys/class/proximity/proximity/enable
 	chown system system /sys/class/proximity/proximity/prox_manual_calibrate_threshold
 	chown system system /sys/class/proximity/proximity/prox_init
 	chown system system /sys/class/proximity/proximity/prox_threshold_init
@@ -137,12 +160,12 @@ on boot
 	chown system system /sys/class/proximity/proximity/prox_wakelock
 	chown system system /sys/class/proximity/proximity/prox_phone_is_sleep
 	chown system system /sys/class/proximity/proximity/prox_irq
-    chown system system /sys/class/proximity/proximity/prox_offset_cal_verify
-    chown system system /sys/class/proximity/proximity/prox_calibrate_verify
+	chown system system /sys/class/proximity/proximity/prox_offset_cal_verify
+	chown system system /sys/class/proximity/proximity/prox_calibrate_verify
 
 	chmod 0644 /sys/class/proximity/proximity/prox_value
 	chmod 0644 /sys/class/proximity/proximity/reg
-	chmod 0644 /sys/class/proximity/proximity/enable
+	chmod 0644 /sys/class/proximity/proximity/prox_value
 	chmod 0644 /sys/class/proximity/proximity/prox_offset_cal
 	chmod 0644 /sys/class/proximity/proximity/dev_init
 	chmod 0644 /sys/class/proximity/proximity/prox_manual_calibrate_threshold
@@ -166,6 +189,11 @@ on boot
 
 	#light
 	chown system system /sys/class/light/light/enable
+	chown system system /sys/class/light/light/tp_cfg
+	chown system system /sys/class/light/light/fac_calibrate
+	chown system system /sys/class/light/light/light_value
+	chown system system /sys/class/light/light/calibrate
+	chown system system /sys/class/light/light/chip_name
 	chown system system /sys/class/light/light/delay
 	chown system system /sys/class/light/light/red_data
 	chown system system /sys/class/light/light/green_data
@@ -175,16 +203,15 @@ on boot
 	chown system system /sys/class/light/light/module_tpcolor
 	chown system system /sys/class/light/light/dump_tp_parameter
 	chown system system /sys/class/light/light/dev_init
-	chown system system /sys/class/light/light/tp_cfg
-	chown system system /sys/class/light/light/fac_calibrate
-	chown system system /sys/class/light/light/calibrate
-	chown system system /sys/class/light/light/chip_name
-	chown system system /sys/class/light/light/light_value
-	chown system system /sys/kernel/lcd_enhance/cabc
 
 	chmod 0644 system system /sys/class/light/light/enable
 	chmod 0644 system system /sys/class/light/light/delay
 	chmod 0644 system system /sys/class/light/light/red_data
+	chmod 0644 system system /sys/class/light/light/tp_cfg
+	chmod 0644 system system /sys/class/light/light/fac_calibrate
+	chmod 0644 system system /sys/class/light/light/calibrate
+	chmod 0644 system system /sys/class/light/light/light_value
+	chmod 0644 system system /sys/class/light/light/chip_name
 	chmod 0644 system system /sys/class/light/light/blue_data
 	chmod 0644 system system /sys/class/light/light/green_data
 	chmod 0644 system system /sys/class/light/light/clear_data
@@ -192,11 +219,37 @@ on boot
 	chmod 0644 system system /sys/class/light/light/module_tpcolor
 	chmod 0644 system system /sys/class/light/light/dump_tp_parameter
 	chmod 0644 system system /sys/class/light/light/dev_init
-	chmod 0644 system system /sys/class/light/light/tp_cfg
-	chmod 0644 system system /sys/class/light/light/fac_calibrate
-	chmod 0644 system system /sys/class/light/light/calibrate
-	chown 0644 system system /sys/class/light/light/chip_name
-	chown 0644 system system /sys/class/light/light/light_value
+
+	#temperature
+	chown system system /sys/class/temperature/temperature/enable
+	chown system system /sys/class/temperature/temperature/temperature_poll_time
+
+	chmod 0644 system /sys/class/temperature/temperature/enable
+	chmod 0644 /sys/class/temperature/temperature/temperature_data
+
+
+	#humidity
+	chown system system /sys/class/humidity/humidity/enable
+	chown system system /sys/class/humidity/humidity/humidity_poll_time
+
+	chmod 0644 system /sys/class/humidity/humidity/enable
+	chmod 0644 /sys/class/humidity/humidity/humidity_data
+
+	#sensor_common
+	chown system system /sys/class/sensor/temp_humidity/raw_humidity
+	chown system system /sys/class/sensor/temp_humidity/raw_temp
+
+	chown system system /sys/kernel/lcd_enhance/cabc
+
+# ADDED BY ZTEMT ZhuBing END
+
+#ti drv2605 vibrator
+    chmod 0660 /dev/drv2605
+    chown system system /dev/drv2605
+    chown system system /sys/class/timed_output/vibrator_drv2605/enable
+
+# add for ndt force-key
+    chmod 666 dev/i2c-8
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
@@ -316,6 +369,14 @@ on boot
     write /data/misc/radio/copy_complete 0
     chown radio radio /data/misc/radio/copy_complete
     chmod 0660 /data/misc/radio/copy_complete
+
+    # File flags for prebuilt ril db file
+    write /data/misc/radio/prebuilt_db_support 1
+    chown radio radio /data/misc/radio/prebuilt_db_support
+    chmod 0400 /data/misc/radio/prebuilt_db_support
+    write /data/misc/radio/db_check_done 0
+    chown radio radio /data/misc/radio/db_check_done
+    chmod 0660 /data/misc/radio/db_check_done
 
 # msm specific files that need to be created on /data
 on post-fs-data
@@ -443,23 +504,6 @@ service qcomsysd /system/bin/qcom-system-daemon
     user root
     group root qcom_diag
 
-# ztemt Disable SSR to SoC restart
-on property:persist.sys.ssr.restart_level=1
-    write /sys/bus/msm_subsys/devices/subsys0/restart_level system
-    write /sys/bus/msm_subsys/devices/subsys1/restart_level system
-    write /sys/bus/msm_subsys/devices/subsys2/restart_level system
-    write /sys/bus/msm_subsys/devices/subsys3/restart_level system
-
-# Enable SSR
-on property:persist.sys.ssr.restart_level=3
-    write /sys/bus/msm_subsys/devices/subsys0/restart_level related
-    write /sys/bus/msm_subsys/devices/subsys1/restart_level related
-    write /sys/bus/msm_subsys/devices/subsys2/restart_level related
-    write /sys/bus/msm_subsys/devices/subsys3/restart_level related
-
-on property:persist.sys.ap.restart_level=*
-    write /sys/module/msm_poweroff/parameters/download_mode ${persist.sys.ap.restart_level}
-
 service ssr_setup /system/bin/ssr_setup
     oneshot
     disabled
@@ -483,6 +527,10 @@ on property:persist.sys.ssr.enable_ramdumps=0
 
 on property:sys.boot_completed=1
     write /dev/kmsg "Boot completed "
+    write /sys/block/dm-0/queue/read_ahead_kb 128
+
+    # CPE fw_name used by sound trigger HAL
+    chown media audio /sys/kernel/wcd_cpe0/fw_name
 
 on property:persist.radio.atfwd.start=false
     stop atfwd
@@ -519,6 +567,17 @@ on property:bluetooth.startbtsnoop=true
 
 on property:bluetooth.startbtsnoop=false
     stop btsnoop
+
+# used for fingerprint added by nubia start
+on property:persist.sys.fingerprint.wakeup=yes
+    write /sys/kernel/fingerprint/wake_up 1
+on property:persist.sys.fingerprint.wakeup=no
+    write /sys/kernel/fingerprint/wake_up 0
+# used for fingerprint added by nubia end
+
+# wangchong for smartPA calibration
+on property:persist.sys.calibrate.smartpa=1
+    write /sys/class/i2c-dev/i2c-8/device/8-0034/impedance_state 1
 
 service qcom-c_core-sh /system/bin/sh /init.qcom.class_core.sh
     class core
@@ -622,27 +681,15 @@ service btsnoop /system/bin/btsnoop
    disabled
    oneshot
 
+# Modify by Li Songbo 2015.12.14 begin
 service ftmd /system/bin/logwrapper /system/bin/ftmdaemon -n
     class main
     user root
     group bluetooth net_bt_admin misc net_bt_stack qcom_diag
     disabled
     oneshot
+# Modify by Li Songbo 2015.12.14 end
 
-on property:persist.service.ftmdaemon=1
-    start config_bluetooth
-
-on property:persist.service.ftmdaemon=1
-    start ftmd
-
-on property:persist.service.ftmdaemon=0
-    stop ftmd
-
-service bridgemgrd /system/bin/bridgemgrd
-    class late_start
-    user radio
-    group radio qcom_diag
-    disabled
 service port-bridge /system/bin/port-bridge /dev/mhi_pipe_32 /dev/ttyGS0
     class main
     user radio system
@@ -772,20 +819,17 @@ service iprenew_p2p /system/bin/dhcpcd -n
     disabled
     oneshot
 
-service ptt_socket_app /system/bin/ptt_socket_app -d
-    class main
-    user root
-    group root
-    oneshot
+#service ptt_socket_app /system/bin/ptt_socket_app -d
+#    class main
+#    user root
+#    group root
+#    oneshot
 
 service ptt_ffbm /system/bin/ptt_socket_app -f -d
     user root
     group root
     disabled
     oneshot
-
-on property:stop_ptt_socket_app=1
-    stop ptt_socket_app    
 
 service wifi_ftmd /system/bin/wifi_ftmd
     user system
@@ -887,15 +931,19 @@ service wifi-crda /system/bin/sh /system/etc/init.crda.sh
    disabled
    oneshot
 
-service config-zram /system/bin/sh /system/etc/init.qcom.zram.sh
-   class late_start
-   user root
-   disabled
-   oneshot
+# nubia add 
+#service config-zram /system/bin/sh /system/etc/init.qcom.zram.sh
+#   class late_start
+#   user root
+#   disabled
+#   oneshot
+#nubia add end
 
 on property:sys.boot_completed=1
     start qcom-post-boot
-    start config-zram
+#nubia add
+#    start config-zram
+#nubia add end
 
 service atfwd /system/bin/ATFWD-daemon
     class late_start
@@ -996,6 +1044,19 @@ service hcidump /system/bin/sh /system/etc/hcidump.sh
     disabled
     oneshot
 
+#Use ztemt poweroffcharger
+#service charger /charger
+#    class charger
+
+service poweroffcharge /sbin/poweroffcharge
+    class charger
+
+service productionmode /sbin/productionmode
+    class core
+    user root
+    disabled
+    oneshot
+
 
 service ssr_diag /system/bin/ssr_diag
     class late_start
@@ -1078,6 +1139,12 @@ service msm_irqbalance /system/bin/msm_irqbalance -f /system/vendor/etc/msm_irqb
     group root
     disabled
 
+service msm_irqbal_lb /system/bin/msm_irqbalance -f /system/vendor/etc/msm_irqbalance_little_big.conf
+    class core
+    user root
+    group root
+    disabled
+
 service wfdservice /system/bin/wfdservice
     class main
     user system
@@ -1090,6 +1157,14 @@ on property:sys.wfdservice=enable
 
 on property:sys.wfdservice=disable
     stop wfdservice
+
+# Add by Li Songbo 2015.12.14 begin
+on property:persist.service.ftmdaemon=1
+       start ftmd
+
+on property:persist.service.ftmdaemon=0
+       stop ftmd
+# Add by Li Songbo 2015.12.14 end
 
 service RIDL /system/vendor/bin/RIDLClient.exe
     class late_start
@@ -1131,7 +1206,6 @@ service bugreport /system/bin/dumpstate -d -p -B \
     class main
     disabled
     oneshot
-    
 service power_engine /system/bin/power_engine
     user root
     group root
@@ -1144,26 +1218,70 @@ on property:persist.sys.power_ctrl=1
 on property:persist.sys.power_ctrl=0
     stop power_engine
 
-#dm instructions added by ztemt
-service dmapp /system/bin/dmapp
-	class main
-	seclabel u:r:dm:s0
+# Addde by Song LinHua 2014.12.18 begin
+#   means of  the value of resstart_level:
+#        SYSTEM  : restart system
+#       RELATED: restart the related subsystem only
+on property:persist.sys.ssr.restart_level=1
+    write /sys/bus/msm_subsys/devices/subsys0/restart_level "SYSTEM"
+    write /sys/bus/msm_subsys/devices/subsys1/restart_level "SYSTEM"
+    write /sys/bus/msm_subsys/devices/subsys2/restart_level "SYSTEM"
+    write /sys/bus/msm_subsys/devices/subsys3/restart_level "SYSTEM"
+on property:persist.sys.ssr.restart_level=3
+    write /sys/bus/msm_subsys/devices/subsys0/restart_level "RELATED"
+    write /sys/bus/msm_subsys/devices/subsys1/restart_level "RELATED"
+    write /sys/bus/msm_subsys/devices/subsys2/restart_level "RELATED"
+    write /sys/bus/msm_subsys/devices/subsys3/restart_level "RELATED"
+#   means of  value of download_mode
+#      0:  restart the system normally
+#      1:  restart the system to download mode for dump
+on property:persist.sys.ap.restart_level=0
+    write /sys/module/msm_poweroff/parameters/download_mode 0
+on property:persist.sys.ap.restart_level=1
+    write /sys/module/msm_poweroff/parameters/download_mode 1
+# Addde by Song LinHua 2014.12.18 end
 
-#This is for TP node.
+#This is for pressure-sensor fiwmware auto upgrade;
+service auto_upgrade /system/bin/sh /system/bin/pressure_auto_upgrade.sh
+    class main
+    user root
+    group root
+    oneshot
+# ZTEMT END
+
+#nubia for FT node.
+#This is for Cypress FT FW update .
+service cyttspft /system/bin/cyttsp_ft.sh
+	class main
+	user root
+	group root
+	seclabel u:r:cyttspft:s0
+	oneshot
+# ZTEMT END
+
+#nubia for TP node.
+#This is for Atmel TP FW update .
+service atmel_ts /system/bin/atmel_ts.sh
+	class main
+	user root
+	group root
+	seclabel u:r:atmelts:s0
+	oneshot
+
 service tp_node /system/bin/sh /system/bin/tp_node.sh
     class main
     user root
     group root
     oneshot
 # ZTEMT END
-#ZTEMT ADD by leiwen 2014-12-5 for bt test
+
+#Add by Li Songbo 2015.12.14 begin
 service btCommand /system/bin/btCommand
     class main
     user root
     group root
     disabled
     oneshot
-
 
 on property:persist.service.btcmd=1
     start btCommand
@@ -1183,16 +1301,22 @@ on property:sys.wltest.enable=1
 
 on property:sys.wltest.enable=0
     stop wirelesstest
+#Add by Li Songbo 2015.12.14 end
 
-#ZTEMT END
+# used for goodix fingerprint added by nubia start
+service fpdaemon /system/bin/gxFpDaemon
+	class late_start
+	disabled
 
-#ZTEMT ADD by for fingerprint
-on property:persist.sys.fingerprint.wakeup=yes
-    write /sys/kernel/fingerprint/wake_up 1
-on property:persist.sys.fingerprint.wakeup=no
-    write /sys/kernel/fingerprint/wake_up 0
+on property:sys.goodix.fpdaemon=1
+	start fpdaemon
+# used for goodix fingerprint added by nubia end
 
-#ZTEMT END
+# ZTEMT add for databackup
+    service appdatabackup /system/bin/appdatabackup
+    class main
+    socket appdatabackup stream 600 system system
+# ZTEMT end for databackup
 
 #LCD display preference added by ztemt
 on property:persist.sys.image.enhance=w
@@ -1213,6 +1337,10 @@ on property:persist.sys.image.colortmp=n
 on property:persist.sys.image.colortmp=c
     write /sys/kernel/lcd_enhance/colortmp 26
 
+#for lcd colortmp continuous
+on property:persist.sys.lcd.colortmp=*
+   write /sys/kernel/lcd_enhance/colortmp ${persist.sys.lcd.colortmp}
+
 on property:persist.sys.image.cabc=f
     write /sys/kernel/lcd_enhance/cabc 23
 
@@ -1226,16 +1354,3 @@ on property:persist.sys.image.cabc=h
     write /sys/kernel/lcd_enhance/cabc 26
 #LCD display preference end
 
-# used for goodix fingerprint added by nubia start
-#service fpdaemon /system/bin/gxFpDaemon
-#	class late_start
-#	disabled
-
-service fingerprintd /system/bin/fingerprintd
-     class late_start
-    socket fpce stream 0666 system system
-    user system
-
-on property:sys.goodix.fpdaemon=1
-	start fpdaemon
-# used for goodix fingerprint added by nubia end

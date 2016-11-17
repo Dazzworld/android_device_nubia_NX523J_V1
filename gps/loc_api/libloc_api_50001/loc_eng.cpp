@@ -106,10 +106,6 @@ static loc_param_s_type gps_conf_table[] =
   {"ACCURACY_THRES",                 &gps_conf.ACCURACY_THRES,                 NULL, 'n'},
   {"NMEA_PROVIDER",                  &gps_conf.NMEA_PROVIDER,                  NULL, 'n'},
   {"CAPABILITIES",                   &gps_conf.CAPABILITIES,                   NULL, 'n'},
-  {"XTRA_VERSION_CHECK",             &gps_conf.XTRA_VERSION_CHECK,             NULL, 'n'},
-  {"XTRA_SERVER_1",                  &gps_conf.XTRA_SERVER_1,                  NULL, 's'},
-  {"XTRA_SERVER_2",                  &gps_conf.XTRA_SERVER_2,                  NULL, 's'},
-  {"XTRA_SERVER_3",                  &gps_conf.XTRA_SERVER_3,                  NULL, 's'},
   {"USE_EMERGENCY_PDN_FOR_EMERGENCY_SUPL",  &gps_conf.USE_EMERGENCY_PDN_FOR_EMERGENCY_SUPL,          NULL, 'n'},
 };
 
@@ -131,7 +127,12 @@ static loc_param_s_type sap_conf_table[] =
   {"SENSOR_CONTROL_MODE",            &sap_conf.SENSOR_CONTROL_MODE,            NULL, 'n'},
   {"SENSOR_USAGE",                   &sap_conf.SENSOR_USAGE,                   NULL, 'n'},
   {"SENSOR_ALGORITHM_CONFIG_MASK",   &sap_conf.SENSOR_ALGORITHM_CONFIG_MASK,   NULL, 'n'},
-  {"SENSOR_PROVIDER",                &sap_conf.SENSOR_PROVIDER,                NULL, 'n'}
+  {"SENSOR_PROVIDER",                &sap_conf.SENSOR_PROVIDER,                NULL, 'n'},
+  {"XTRA_VERSION_CHECK",             &gps_conf.XTRA_VERSION_CHECK,                  NULL, 'n'},
+  {"XTRA_SERVER_1",                  &gps_conf.XTRA_SERVER_1,                  NULL, 's'},
+  {"XTRA_SERVER_2",                  &gps_conf.XTRA_SERVER_2,                  NULL, 's'},
+  {"XTRA_SERVER_3",                  &gps_conf.XTRA_SERVER_3,                  NULL, 's'},
+  {"AGPS_CERT_WRITABLE_MASK",        &gps_conf.AGPS_CERT_WRITABLE_MASK,        NULL, 'n'}
 };
 
 static void loc_default_parameters(void)
@@ -821,7 +822,11 @@ void LocEngReportPosition::proc() const {
                         locEng->engine_status, locEng->adapter->isInSession());
 
         if (locEng->generateNmea &&
-            locEng->adapter->isInSession())
+            mLocation.position_source == ULP_LOCATION_IS_FROM_GNSS &&
+            locEng->adapter->isInSession() &&
+            mTechMask & (LOC_POS_TECH_MASK_SATELLITE |
+                         LOC_POS_TECH_MASK_SENSORS |
+                         LOC_POS_TECH_MASK_HYBRID))
         {
             unsigned char generate_nmea = reported &&
                                           (mStatus != LOC_SESS_FAILURE);
@@ -2054,14 +2059,12 @@ int loc_eng_set_position_mode(loc_eng_data_s_type &loc_eng_data,
     ENTRY_LOG_CALLFLOW();
     INIT_CHECK(loc_eng_data.adapter, return -1);
 
-    int gnssType = getTargetGnssType(loc_get_target());
-
-    // The position mode for GSS/QCA1530 can only be standalone
-    bool is1530 = gnssType == GNSS_QCA1530;
-    bool isAPQ = gnssType == GNSS_GSS;
-    if ((isAPQ || is1530) && params.mode != LOC_POSITION_MODE_STANDALONE) {
+    // The position mode for AUTO/GSS/QCA1530 can only be standalone
+    if (!(gps_conf.CAPABILITIES & GPS_CAPABILITY_MSB) &&
+        !(gps_conf.CAPABILITIES & GPS_CAPABILITY_MSA) &&
+        (params.mode != LOC_POSITION_MODE_STANDALONE)) {
         params.mode = LOC_POSITION_MODE_STANDALONE;
-        LOC_LOGD("Position mode changed to standalone for target with GSS/qca1530.");
+        LOC_LOGD("Position mode changed to standalone for target with AUTO/GSS/qca1530.");
     }
 
     if(! loc_eng_data.adapter->getUlpProxy()->sendFixMode(params))
@@ -2333,10 +2336,8 @@ void loc_eng_agps_init(loc_eng_data_s_type &loc_eng_data, AGpsExtCallbacks* call
                                                  AGPS_TYPE_WIFI,
                                                  true);
 
-    int gnssType = getTargetGnssType(loc_get_target());
-    bool isAPQ = (gnssType == GNSS_GSS);
-    bool is1530 = (gnssType == GNSS_QCA1530);
-    if (!isAPQ && !is1530) {
+    if ((gps_conf.CAPABILITIES & GPS_CAPABILITY_MSA) ||
+        (gps_conf.CAPABILITIES & GPS_CAPABILITY_MSB)) {
         loc_eng_data.agnss_nif = new AgpsStateMachine(servicerTypeAgps,
                                                       (void *)loc_eng_data.agps_status_cb,
                                                       AGPS_TYPE_SUPL,
@@ -2885,9 +2886,8 @@ void loc_eng_handle_engine_up(loc_eng_data_s_type &loc_eng_data)
     // modem is back up.  If we crashed in the middle of navigating, we restart.
     if (loc_eng_data.adapter->isInSession()) {
         // This sets the copy in adapter to modem
-        loc_eng_data.adapter->setPositionMode(NULL);
         loc_eng_data.adapter->setInSession(false);
-        loc_eng_start_handler(loc_eng_data);
+        loc_eng_data.adapter->sendMsg(new LocEngStartFix(loc_eng_data.adapter));
     }
     EXIT_LOG(%s, VOID_RET);
 }
